@@ -1,0 +1,144 @@
+<!DOCTYPE html> 			
+<html lang="en"> 				
+<head> 					
+<meta charset="UTF-8"> 					
+<title></title> 					 					
+</head> 				
+<body> 				  
+
+
+<script type="text/javascript" src="pointjs.js"></script>
+
+<script type="text/javascript">
+
+var pjs = new PointJS(1100, 620, {backgroundColor: 'black'})
+var game = pjs.game;
+var key = pjs.keyControl;
+key.initControl();
+
+var mouse = pjs.mouseControl;
+mouse.initControl();
+
+var text_enter = game.newTextObject({ //text dly voda
+    x: 470,
+    y: 300,
+    size : 30,
+    color: "red"
+});
+
+var text_x = game.newTextObject({ //text dly voda
+    x: 100,
+    y: 100,
+    size : 30,
+    color: "red",
+    text: " "
+});
+
+var text_0 = game.newTextObject({ //text dly voda
+    x: 470,
+    y: 300,
+    text: 'Nickname',
+    size : 30,
+    color: "red",
+    visible: true
+});
+
+
+
+var rect_enter = game.newRoundRectObject({    //рекет для ника
+    x: 430,
+    y: 295,
+    w: 225,
+    h: 30,
+    radius : 15,
+    fillColor: "#FFD700",
+});
+
+var rect_play = game.newRoundRectObject({    //рекет для ника
+    x: 500,
+    y: 400,
+    w: 90,
+    h: 50,
+    radius : 25,
+    fillColor: "green"
+});
+
+var text_7 = game.newTextObject({ //text dly voda
+    x: 520,
+    y: 415,
+    text: 'Play',
+    size : 30,
+    color: "yellow"
+});
+
+var text2 = ' '; // временый техт для хранение
+
+
+game.newLoop('enter', function () {
+
+if (mouse.isPeekStatic("LEFT", rect_enter.getStaticBox())){
+    key.setInputMode(true);
+    text_0.visible = false; //надо разобраться
+
+}
+
+if (key.isInputMode()) {
+    var char = key.getInputChar();
+    var char2 = key.getInputKey();
+}
+   // if (char2 == "BACKSPAKE")
+
+
+
+    if (char) {
+        text2 += char;
+        //console.log(text2);
+    }
+
+
+
+
+
+
+
+
+
+if (mouse.isPeekStatic('LEFT', rect_play.getStaticBox())){
+    text_x.setText(text2);
+    key.setInputMode(false);
+}
+
+if (mouse.isInStatic(rect_play.getStaticBox())){
+    rect_play.fillColor = 'blue'
+} else {
+    rect_play.fillColor = "green";
+
+}
+
+
+
+
+
+text_enter.setText(text2);
+
+rect_enter.draw();
+text_enter.draw();
+text_0.draw();
+
+rect_play.draw();
+text_7.draw();
+text_x.draw();
+
+});
+
+game.setLoop('enter');
+game.start();
+
+
+
+</script>
+
+
+
+</body> 			
+</html>

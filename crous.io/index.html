@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+ <meta name="viewport" content="width=device-width, user-scalable=no"/>
+ <title></title>
+</head>
+<body>
+
+<script type="text/javascript" src="pointjs.js"></script>
+
+<script type="text/javascript">
+
+
+
+var pjs = new PointJS(1100, 620, {backgroundColor: ''})
+
+pjs.system.initFullPage();
+var p = pjs.vector.point;
+var game = pjs.game;
+var mouse = pjs.mouseControl;
+mouse.initControl();
+var r = pjs.math.random;
+
+var width = pjs.game.getWH().w;
+var height = pjs.game.getWH().h;
+var log = pjs.system.log;
+
+
+
+
+var fon=[], s = 50;
+
+for (var x = 0; x<100; x++) {
+  for (var y = 0; y<100; y++) {
+    fon.push(
+            game.newRectObject({
+             x : x*s,
+             y : y*s,
+             w : s,
+             h : s,
+             fillColor: "#C0C0C0",
+           })
+              );
+  }
+}
+
+var map = game.newRectObject({//код для мини карты
+ w : 100,
+ h : 100,
+ fillColor : "black",
+ alpha : 0.6
+});
+
+var cell = game.newCircleObject({// код кружка для мини карты
+ radius: 2,
+ fillColor: "white"
+});
+
+
+var player = game.newCircleObject({
+ x: 400,
+ y: 100,
+ radius: 20,
+ fillColor: 'red'
+});
+
+var player1 = game.newCircleObject({
+ x: 100,
+ y: 100,
+ radius: 20,
+ fillColor: 'black'
+});
+
+var recet1 = game.newRectObject({//столбы для большой карты
+ x : 1,
+ y : 5000,
+ w : 5000,
+ h : 3,
+ fillColor : "red"
+});
+
+var recet2 = game.newRectObject({
+ x : 1,
+ y : 1,
+ w : 5000,
+ h : 3,
+ fillColor : "gold"
+});
+
+var recet3 = game.newRectObject({
+ x : 5000,
+ y : 1,
+ w : 3,
+ h : 5000,
+ fillColor : "green"
+});
+
+var recet4 = game.newRectObject({//последний столбик дял карты
+ x : 1,
+ y : 1,
+ w : 3,
+ h : 5000,
+ fillColor : "green"
+});
+
+
+
+var eat =[];
+
+for (var i = 0; i<3000; i++) {//шарики для еды
+   eat.push(
+           game.newCircleObject({
+            x: r(0, 5000),
+            y: r(0, 5000),
+            radius: r(3, 4),
+            fillColor: pjs.colors.randomColor(0, 255)
+           })
+   );
+}
+
+
+var b=player.radius;
+
+
+var massa = game.newTextObject({
+ text : "Mass: 0",
+ size : 20,
+ color: "black"
+});
+
+
+
+
+
+var y =0;
+
+
+
+
+game.newLoop('game', function () {
+
+ for (var i in fon) {
+  if (fon[i].isInCamera()) {
+   fon[i].draw();
+  }
+ }
+
+ for (var i in eat) {
+  if (eat[i].isInCamera()) {
+   eat[i].draw();
+
+
+
+   if (player.getDistanceC(eat[i].getPosition(1)) < player.radius + eat[i].radius) {
+    eat.splice(i, 1);
+    b+=1;
+    player.setRadiusC(b);
+    y++;
+   }
+
+  }
+ }
+
+ if (player.radius<100);{
+  //log(player.radius);
+ }
+
+if (eat.length<2900) {
+for (var i = 0; i<1000; i++) {
+  eat.push(
+          game.newCircleObject({
+           x: r(0, 2000),
+           y: r(0, 2000),
+           radius: r(3, 4),
+           fillColor: pjs.colors.randomColor(0, 255)
+          })
+  );
+ }
+
+
+}
+
+
+
+
+
+
+
+if (player.isStaticIntersect(player1.getStaticBox()))
+ player.setAlpha(0);
+
+
+recet1.draw(); recet2.draw(); recet3.draw(); recet4.draw(); player.draw(); player1.draw()
+
+
+ massa.reStyle({
+  text : "Mass: " + y
+ })
+
+
+ massa.setPositionS(p(10,20));
+ massa.draw();
+
+
+
+//player.drawDynamicBox();
+//player.drawStaticBox();
+ //player1.drawDynamicBox();
+ //player1.drawStaticBox();
+
+
+player.moveTimeC(mouse.getPosition(), player.radius*4)
+ pjs.camera.setPositionC(player.getPosition(1));
+
+
+map.setPositionS(p(width-110, height-110));//миникарта для игры
+map.draw();
+
+
+ cell.setPositionS(p(width-110, height-110));
+cell.move(p(player.getPosition(1).x/52, player.getPosition(1).y/52));// кружок для карты
+cell.draw();
+ //console.log(pjs.OOP.getArrInCamera(fon).length);
+}); // оканчание играка
+
+
+
+
+
+
+
+
+
+
+
+
+game.setLoop('game');
+game.start();
+
+
+
+
+
+</script>
+
+</body>
+</html>
